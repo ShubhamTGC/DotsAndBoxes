@@ -21,8 +21,8 @@ public class Gamesetup : MonoBehaviour
 
     // Board Size
     // modify later to let user config
-    public static int board_Width = 4;
-    public static int board_Height = 3;
+    public static int board_Width = 8;
+    public static int board_Height = 9;
 
     // Structure of game
 
@@ -43,13 +43,16 @@ public class Gamesetup : MonoBehaviour
 
     public Text TouchBarText;
     private static GameMenu GameInstance;
+    public int width, height;
     void Start()
     {
-      
-        GameInstance = GameMenu.MainGame;
-        Debug.Log("board hieght " + GameInstance.Height + "width " + GameInstance.width);
-        board_Height = GameInstance.Height;
-        board_Width = GameInstance.width;
+
+        board_Width = width;
+        board_Height = height;
+        //GameInstance = GameMenu.MainGame;
+        //Debug.Log("board hieght " + GameInstance.Height + "width " + GameInstance.width);
+        //board_Height = GameInstance.Height;
+        //board_Width = GameInstance.width;
         if (board_Width > 7 && board_Height > 8)  // 8 x 9
         {
             ScreenBufffer = 1.25f;

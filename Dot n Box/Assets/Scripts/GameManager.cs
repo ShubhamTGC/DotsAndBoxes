@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     {
         PLAYER1,
         PLAYER2,
+        PLAYER3,
+        PLAYER4,
     }
     public Text Player1Points, Player2Points;
     public Text WinnerText;
