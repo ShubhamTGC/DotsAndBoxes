@@ -18,31 +18,51 @@ public class GameManager : MonoBehaviour
     static int Player2Score;
     public PlayerTurn playerTurn;
     public GameObject P1Indication,P2Indication;
-    public Sprite Player1_vertical, Player1_horizontal, Player1_Box;
-    public Sprite Player2_vertical, Player2_horizontal, Player2_Box;
+    public Sprite Player1_vertical, Player1_horizontal, Player1_Box, Player2_Box, Player3_Box, Player4_Box;
+
 
     int BoxCount = Gamesetup.board_Height * Gamesetup.board_Width;
+    public GameObject Userturn12, Userturn34;
+
     void Start()
     {
-        Player1Score = 0;
-        Player2Score = 0;
-        Player1Points.text = "Player 1 point: " + Player1Score;
-        Player2Points.text = "Player 1 point: " + Player2Score;
-
-        if (Random.Range(0f, 1f) < 0.5f)
+        //Player1Score = 0;
+        //Player2Score = 0;
+        //Player1Points.text = "Player 1 point: " + Player1Score;
+        //Player2Points.text = "Player 1 point: " + Player2Score;
+        float randomvalue = Random.Range(0f, 2f);
+        if(randomvalue < 0.5f)
         {
-            P1Indication.SetActive(true);
-            P2Indication.SetActive(false);
+            Userturn12.SetActive(true);
+            Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            Userturn34.SetActive(false);
             playerTurn = PlayerTurn.PLAYER1;
         }
-        else
+        else if(randomvalue > 0.5f && randomvalue < 1f)
         {
-            P2Indication.SetActive(true);
-            P1Indication.SetActive(false);
+            Userturn12.SetActive(true);
+            Userturn12.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+            Userturn34.SetActive(false);
             playerTurn = PlayerTurn.PLAYER2;
         }
+        else if (randomvalue > 1f && randomvalue < 1.5f)
+        {
+            Userturn34.SetActive(true);
+            Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+            Userturn12.SetActive(false);
+            playerTurn = PlayerTurn.PLAYER3;
+        }
+        else if (randomvalue > 1.5f)
+        {
+            Userturn34.SetActive(true);
+            Userturn34.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            Userturn12.SetActive(false);
+            playerTurn = PlayerTurn.PLAYER4;
+        }
 
-        
+
+
+
     }
 
     // Update is called once per frame
@@ -184,8 +204,9 @@ public class GameManager : MonoBehaviour
                         if (!extra_turn)
                         {
                             playerTurn = PlayerTurn.PLAYER2;
-                            P1Indication.SetActive(false);
-                            P2Indication.SetActive(true);
+                            Userturn12.SetActive(true);
+                            Userturn12.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                            Userturn34.SetActive(false);
                         }
                     }
 
@@ -197,7 +218,7 @@ public class GameManager : MonoBehaviour
                         Debug.Log(x_index + "hit" + y_index);
                         if (is_empty_horizontal)
                         {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player2_horizontal;
+                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
                             hit.transform.tag = "Is play";
                             if (y_index != 0)
                             {
@@ -229,7 +250,7 @@ public class GameManager : MonoBehaviour
                         else
                         if (is_empty_vertical)
                         {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player2_vertical;
+                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
                             hit.transform.tag = "Is play";
                             if (x_index != 0)
                             {
@@ -259,9 +280,159 @@ public class GameManager : MonoBehaviour
                         }
                         if (!extra_turn)
                         {
+                            playerTurn = PlayerTurn.PLAYER3;
+                            Userturn12.SetActive(false);
+                            Userturn34.SetActive(true);
+                            Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                           
+                        }
+                    }
+                    else if (this.playerTurn == PlayerTurn.PLAYER3)
+
+                    {
+                        Debug.Log(x_index + "hit" + y_index);
+                        if (is_empty_horizontal)
+                        {
+                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
+                            hit.transform.tag = "Is play";
+                            if (y_index != 0)
+                            {
+                                if (CheckTopBox(x_index, y_index))
+                                {
+                                    Player2Score++;
+                                    Player2Points.text = "Player2 Point: " + Player2Score;
+                                    Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player3_Box;
+                                    Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
+                                    Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
+                                    extra_turn = true;
+                                }
+                            }
+
+                            if (y_index != Gamesetup.board_Height)
+                            {
+                                if (CheckDownBox(x_index, y_index))
+                                {
+                                    Player2Score++;
+                                    Player2Points.text = "Player2 Point: " + Player2Score;
+                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
+                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
+                                    extra_turn = true;
+                                }
+                            }
+                        }
+
+                        else
+                        if (is_empty_vertical)
+                        {
+                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
+                            hit.transform.tag = "Is play";
+                            if (x_index != 0)
+                            {
+                                if (CheckLeftBox(x_index, y_index))
+                                {
+                                    Player2Score++;
+                                    Player2Points.text = "Player2 Point: " + Player2Score;
+                                    Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
+                                    Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
+                                    Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
+                                    extra_turn = true;
+                                }
+                            }
+
+                            if (x_index != Gamesetup.board_Width)
+                            {
+                                if (CheckRightBox(x_index, y_index))
+                                {
+                                    Player2Score++;
+                                    Player2Points.text = "Player2 Point: " + Player2Score;
+                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
+                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
+                                    extra_turn = true;
+                                }
+                            }
+                        }
+                        if (!extra_turn)
+                        {
+                            playerTurn = PlayerTurn.PLAYER4;
+                            Userturn12.SetActive(false);
+                            Userturn34.SetActive(true);
+                            Userturn34.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                        }
+                    }
+                    else if (this.playerTurn == PlayerTurn.PLAYER4)
+
+                    {
+                        Debug.Log(x_index + "hit" + y_index);
+                        if (is_empty_horizontal)
+                        {
+                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
+                            hit.transform.tag = "Is play";
+                            if (y_index != 0)
+                            {
+                                if (CheckTopBox(x_index, y_index))
+                                {
+                                    Player2Score++;
+                                    Player2Points.text = "Player2 Point: " + Player2Score;
+                                    Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player4_Box;
+                                    Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
+                                    Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
+                                    extra_turn = true;
+                                }
+                            }
+
+                            if (y_index != Gamesetup.board_Height)
+                            {
+                                if (CheckDownBox(x_index, y_index))
+                                {
+                                    Player2Score++;
+                                    Player2Points.text = "Player2 Point: " + Player2Score;
+                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
+                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
+                                    extra_turn = true;
+                                }
+                            }
+                        }
+
+                        else
+                        if (is_empty_vertical)
+                        {
+                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
+                            hit.transform.tag = "Is play";
+                            if (x_index != 0)
+                            {
+                                if (CheckLeftBox(x_index, y_index))
+                                {
+                                    Player2Score++;
+                                    Player2Points.text = "Player2 Point: " + Player2Score;
+                                    Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
+                                    Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
+                                    Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
+                                    extra_turn = true;
+                                }
+                            }
+
+                            if (x_index != Gamesetup.board_Width)
+                            {
+                                if (CheckRightBox(x_index, y_index))
+                                {
+                                    Player2Score++;
+                                    Player2Points.text = "Player2 Point: " + Player2Score;
+                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
+                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
+                                    extra_turn = true;
+                                }
+                            }
+                        }
+                        if (!extra_turn)
+                        {
                             playerTurn = PlayerTurn.PLAYER1;
-                            P1Indication.SetActive(true);
-                            P2Indication.SetActive(false);
+                            Userturn12.SetActive(true);
+                            Userturn34.SetActive(false);
+                            Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                         }
                     }
                 }
@@ -280,9 +451,9 @@ public class GameManager : MonoBehaviour
         {
             result = true;
         }
-
         return (false || result);
     }
+
 
     bool CheckLeftBox(int x_tile, int y_tile)
     {
@@ -295,7 +466,6 @@ public class GameManager : MonoBehaviour
         {
             result = true;
         }
-
         return (false || result);
     }
 
@@ -310,7 +480,6 @@ public class GameManager : MonoBehaviour
         {
             result = true;
         }
-
         return (false || result);
     }
     bool CheckDownBox(int x_tile, int y_tile)
