@@ -47,12 +47,12 @@ public class Gamesetup : MonoBehaviour
     void Start()
     {
 
-        board_Width = width;
-        board_Height = height;
-        //GameInstance = GameMenu.MainGame;
-        //Debug.Log("board hieght " + GameInstance.Height + "width " + GameInstance.width);
-        //board_Height = GameInstance.Height;
-        //board_Width = GameInstance.width;
+        //board_Width = width;
+        //board_Height = height;
+        GameInstance = GameMenu.MainGame;
+        Debug.Log("board hieght " + GameInstance.Height + "width " + GameInstance.width);
+        board_Height = GameInstance.Height;
+        board_Width = GameInstance.width;
         if (board_Width > 7 && board_Height > 8)  // 8 x 9
         {
             ScreenBufffer = 1.25f;
@@ -104,21 +104,7 @@ public class Gamesetup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Vector3 screenpt = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //    mousepos = new Vector2(screenpt.x, screenpt.y);
-        //    hit = Physics2D.Raycast(mousepos, Vector2.zero);
-        //    Debug.Log("object name " + hit.collider.gameObject.name);
-        //    TouchBarText.text = hit.collider.gameObject.name;
-
-
-        //}
-        //if (Input.GetMouseButtonUp(0))
-        //{
-        //    Debug.Log("object name " + hit.collider.gameObject.name);
-        //    TouchBarText.text = "";
-        //}
+    
     }
 
     void CreateBoard(int board_Width, int board_Height)

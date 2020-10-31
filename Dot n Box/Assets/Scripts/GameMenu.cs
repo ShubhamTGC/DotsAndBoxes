@@ -7,6 +7,10 @@ public class GameMenu : MonoBehaviour
 {
     public static GameMenu MainGame { get; set; }
     [HideInInspector] public int width, Height;
+    public bool Player1,Player2,Player3,Player4;
+    public bool Red, Blue, Pink, Purple;
+
+
     void Start()
     {
         if(MainGame != null)
