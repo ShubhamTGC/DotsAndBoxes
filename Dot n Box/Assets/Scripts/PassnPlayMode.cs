@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -206,30 +207,37 @@ public class PassnPlayMode : MonoBehaviour
 
     public void ThreePlayerTokenSelection()
     {
+        
         int currentIndex;
         GameObject gb = EventSystem.current.currentSelectedGameObject;
         if (Player1Token.Contains(gb))
         {
             currentIndex = Player1Token.FindIndex(x => x.name == gb.name);  
             tokenSetup(Player1Token, player1index, currentIndex);
+            PlayerTokentaken(currentIndex, player1index, Player2Token, Player3Token);
             player1index = currentIndex;
+            
         }
         if (Player2Token.Contains(gb))
         {
             currentIndex = Player2Token.FindIndex(x => x.name == gb.name);
             tokenSetup(Player2Token, player2index, currentIndex);
+            PlayerTokentaken(currentIndex, player2index, Player1Token, Player3Token);
             player2index = currentIndex;
         }
         if (Player3Token.Contains(gb))
         {
             currentIndex = Player3Token.FindIndex(x => x.name == gb.name);
             tokenSetup(Player3Token, player3index, currentIndex);
+            PlayerTokentaken(currentIndex, player3index, Player1Token, Player2Token);
             player3index = currentIndex;
         }
     }
 
+
     void tokenSetup(List<GameObject> tokens,int lastindex,int newindex)
     {
+        Debug.Log("Index of click " + lastindex + " ==  " + newindex);
         tokens[lastindex].GetComponent<RectTransform>().localScale = Vector3.one;
         tokens[lastindex].transform.GetChild(1).gameObject.SetActive(false);
         tokens[newindex].GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1f);
@@ -237,29 +245,19 @@ public class PassnPlayMode : MonoBehaviour
        
     }
 
-    void OtherSetup(List<GameObject> token1,List<GameObject> token2,List<GameObject> token3,int currentindex,int index, int token1index,int token2index)
+    void PlayerTokentaken(int NewIndex,int prevuiousIndex,List<GameObject> secondList,List<GameObject> ThirdList)
     {
-        if(currentindex == token1index)
+        if(secondList[NewIndex].gameObject.GetComponent<RectTransform>().localScale != Vector3.one)
         {
-            token2[index].GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1f);
-            token2[index].transform.GetChild(1).gameObject.SetActive(true);
-            token2[currentindex].GetComponent<RectTransform>().localScale = Vector3.one;
-            token2[currentindex].transform.GetChild(1).gameObject.SetActive(false);
-
+            tokenSetup(secondList, NewIndex, prevuiousIndex);
         }
-        if(currentindex == token2index)
+        if (ThirdList[NewIndex].gameObject.GetComponent<RectTransform>().localScale != Vector3.one)
         {
-            token3[index].GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1f);
-            token3[index].transform.GetChild(1).gameObject.SetActive(true);
-            token3[currentindex].GetComponent<RectTransform>().localScale = Vector3.one;
-            token3[currentindex].transform.GetChild(1).gameObject.SetActive(false);
+            tokenSetup(ThirdList, NewIndex, prevuiousIndex);
         }
-        //if(currentindex == index)
-        //{
-        //    token1[index].GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1f);
-        //    token1[index].transform.GetChild(1).gameObject.SetActive(true);
-        //}
+     
     }
+
 
     void TeamPlayerSetup()
     {

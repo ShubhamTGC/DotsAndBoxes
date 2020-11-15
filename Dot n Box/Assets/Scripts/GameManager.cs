@@ -23,46 +23,107 @@ public class GameManager : MonoBehaviour
 
     int BoxCount = Gamesetup.board_Height * Gamesetup.board_Width;
     public GameObject Userturn12, Userturn34;
-
-    void Start()
+    private static GameMenu GameInstance;
+    public GameObject Player1Dies, Player2Dies, Player3Dies, Player4Dies;
+    private bool Player1Active, Player2Active, Player3Active, Player4Active;
+    public GameObject LoadingPage;
+    IEnumerator Start()
     {
-        //Player1Score = 0;
-        //Player2Score = 0;
-        //Player1Points.text = "Player 1 point: " + Player1Score;
-        //Player2Points.text = "Player 1 point: " + Player2Score;
+        LoadingPage.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        LoadingPage.SetActive(false);
+        GameInstance = GameMenu.MainGame;
         float randomvalue = Random.Range(0f, 2f);
-        if(randomvalue < 0.5f)
+        Player1Active = GameInstance.Player1;
+        Player2Active = GameInstance.Player2;
+        Player3Active = GameInstance.Player3;
+        Player4Active = GameInstance.Player4;
+        if (GameInstance.Player1 && GameInstance.Player2)
         {
-            Userturn12.SetActive(true);
-            Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-            Userturn34.SetActive(false);
-            playerTurn = PlayerTurn.PLAYER1;
+            Player1Dies.SetActive(true);
+            Player2Dies.SetActive(true);
+            Player3Dies.SetActive(false);
+            Player4Dies.SetActive(false);
+            if (randomvalue < 0.5f)
+            {
+                Userturn12.SetActive(true);
+                Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                Userturn34.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER1;
+            }
+            else if (randomvalue > 0.5f && randomvalue < 1f)
+            {
+                Userturn12.SetActive(true);
+                Userturn12.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                Userturn34.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER2;
+            }
         }
-        else if(randomvalue > 0.5f && randomvalue < 1f)
+        if(GameInstance.Player1 && GameInstance.Player2 && GameInstance.Player3)
         {
-            Userturn12.SetActive(true);
-            Userturn12.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
-            Userturn34.SetActive(false);
-            playerTurn = PlayerTurn.PLAYER2;
+            Player1Dies.SetActive(true);
+            Player2Dies.SetActive(true);
+            Player3Dies.SetActive(true);
+            Player4Dies.SetActive(false);
+            if (randomvalue < 0.5f)
+            {
+                Userturn12.SetActive(true);
+                Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                Userturn34.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER1;
+            }
+            else if (randomvalue > 0.5f && randomvalue < 1f)
+            {
+                Userturn12.SetActive(true);
+                Userturn12.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                Userturn34.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER2;
+            }
+            else if (randomvalue > 1f && randomvalue < 1.5f)
+            {
+                Userturn34.SetActive(true);
+                Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                Userturn12.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER3;
+            }
         }
-        else if (randomvalue > 1f && randomvalue < 1.5f)
+        if (GameInstance.Player4)
         {
-            Userturn34.SetActive(true);
-            Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
-            Userturn12.SetActive(false);
-            playerTurn = PlayerTurn.PLAYER3;
-        }
-        else if (randomvalue > 1.5f)
-        {
-            Userturn34.SetActive(true);
-            Userturn34.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-            Userturn12.SetActive(false);
-            playerTurn = PlayerTurn.PLAYER4;
+            Player1Dies.SetActive(true);
+            Player2Dies.SetActive(true);
+            Player3Dies.SetActive(true);
+            Player4Dies.SetActive(true);
+            if (randomvalue < 0.5f)
+            {
+                Userturn12.SetActive(true);
+                Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                Userturn34.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER1;
+            }
+            else if (randomvalue > 0.5f && randomvalue < 1f)
+            {
+                Userturn12.SetActive(true);
+                Userturn12.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                Userturn34.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER2;
+            }
+            else if (randomvalue > 1f && randomvalue < 1.5f)
+            {
+                Userturn34.SetActive(true);
+                Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                Userturn12.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER3;
+            }
+            else if (randomvalue > 1.5f)
+            {
+                Userturn34.SetActive(true);
+                Userturn34.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                Userturn12.SetActive(false);
+                playerTurn = PlayerTurn.PLAYER4;
+            }
         }
 
-
-
-
+     
     }
 
     // Update is called once per frame
@@ -132,82 +193,85 @@ public class GameManager : MonoBehaviour
                         }
 
                     //Rule Checking code
-
+                   
                     if (this.playerTurn == PlayerTurn.PLAYER1)
                     {
-                        if (is_empty_horizontal)
+                        if (Player1Active)
                         {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
-                            //player has played this Line
-                            hit.transform.tag = "Is play";
-                            // y_index = 0 do not have the top bot
-                            if (y_index != 0)
+                            if (is_empty_horizontal)
                             {
-                                if (CheckTopBox(x_index, y_index))
+                                hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
+                                //player has played this Line
+                                hit.transform.tag = "Is play";
+                                // y_index = 0 do not have the top bot
+                                if (y_index != 0)
                                 {
-                                    Player1Score++;
-                                    Player1Points.text = "Player1 Point: " + Player1Score;
-                                    Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player1_Box;
-                                    Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
-                                    extra_turn = true;
+                                    if (CheckTopBox(x_index, y_index))
+                                    {
+                                        Player1Score++;
+                                        Player1Points.text = "Player1 Point: " + Player1Score;
+                                        Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player1_Box;
+                                        Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
+                                        extra_turn = true;
+                                    }
+                                }
+
+                                if (y_index != Gamesetup.board_Height)
+
+                                {
+                                    if (CheckDownBox(x_index, y_index))
+                                    {
+                                        Player1Score++;
+                                        Player1Points.text = "Player1 Point: " + Player1Score;
+                                        Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
+                                        Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
+                                        extra_turn = true;
+                                    }
                                 }
                             }
 
-                            if (y_index != Gamesetup.board_Height)
-
+                            else if (is_empty_vertical)
                             {
-                                if (CheckDownBox(x_index, y_index))
+                                hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
+                                hit.transform.tag = "Is play";
+                                if (x_index != 0)
                                 {
-                                    Player1Score++;
-                                    Player1Points.text = "Player1 Point: " + Player1Score;
-                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
-                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
-                                    extra_turn = true;
+                                    if (CheckLeftBox(x_index, y_index))
+                                    {
+                                        Player1Score++;
+                                        Player1Points.text = "Player1 Point: " + Player1Score;
+                                        Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
+                                        Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
+                                        extra_turn = true;
+                                    }
                                 }
+
+                                if (x_index != Gamesetup.board_Width)
+                                {
+                                    if (CheckRightBox(x_index, y_index))
+                                    {
+                                        Player1Score++;
+                                        Player1Points.text = "Player1 Point: " + Player1Score;
+                                        Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
+                                        Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
+                                        extra_turn = true;
+                                    }
+                                }
+                            }
+
+                            if (!extra_turn)
+                            {
+                                playerTurn = PlayerTurn.PLAYER2;
+                                Userturn12.SetActive(true);
+                                Userturn12.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                                Userturn34.SetActive(false);
                             }
                         }
-
-                        else
-                        if (is_empty_vertical)
-                        {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
-                            hit.transform.tag = "Is play";
-                            if (x_index != 0)
-                            {
-                                if (CheckLeftBox(x_index, y_index))
-                                {
-                                    Player1Score++;
-                                    Player1Points.text = "Player1 Point: " + Player1Score;
-                                    Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
-                                    Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
-                                    extra_turn = true;
-                                }
-                            }
-
-                            if (x_index != Gamesetup.board_Width)
-                            {
-                                if (CheckRightBox(x_index, y_index))
-                                {
-                                    Player1Score++;
-                                    Player1Points.text = "Player1 Point: " + Player1Score;
-                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
-                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
-                                    extra_turn = true;
-                                }
-                            }
-                        }
-
-                        if (!extra_turn)
-                        {
-                            playerTurn = PlayerTurn.PLAYER2;
-                            Userturn12.SetActive(true);
-                            Userturn12.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
-                            Userturn34.SetActive(false);
-                        }
+                    
                     }
 
                     // behavior like player1
@@ -215,225 +279,259 @@ public class GameManager : MonoBehaviour
                     else if(this.playerTurn == PlayerTurn.PLAYER2)
 
                    {
-                        Debug.Log(x_index + "hit" + y_index);
-                        if (is_empty_horizontal)
+                        if (Player2Active)
                         {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
-                            hit.transform.tag = "Is play";
-                            if (y_index != 0)
+                            Debug.Log(x_index + "hit" + y_index);
+                            if (is_empty_horizontal)
                             {
-                                if (CheckTopBox(x_index, y_index))
+                                hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
+                                hit.transform.tag = "Is play";
+                                if (y_index != 0)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player2_Box;
-                                    Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
-                                    extra_turn = true;
+                                    if (CheckTopBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player2_Box;
+                                        Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
+                                        extra_turn = true;
+                                    }
+                                }
+
+                                if (y_index != Gamesetup.board_Height)
+                                {
+                                    if (CheckDownBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
+                                        Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
+                                        extra_turn = true;
+                                    }
                                 }
                             }
 
-                            if (y_index != Gamesetup.board_Height)
+                            else
+                            if (is_empty_vertical)
                             {
-                                if (CheckDownBox(x_index, y_index))
+                                hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
+                                hit.transform.tag = "Is play";
+                                if (x_index != 0)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
-                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
-                                    extra_turn = true;
+                                    if (CheckLeftBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
+                                        Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
+                                        extra_turn = true;
+                                    }
                                 }
-                            }
-                        }
 
-                        else
-                        if (is_empty_vertical)
-                        {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
-                            hit.transform.tag = "Is play";
-                            if (x_index != 0)
-                            {
-                                if (CheckLeftBox(x_index, y_index))
+                                if (x_index != Gamesetup.board_Width)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
-                                    Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
-                                    extra_turn = true;
+                                    if (CheckRightBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
+                                        Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
+                                        extra_turn = true;
+                                    }
                                 }
                             }
+                            if (!extra_turn)
+                            {
+                                if (Player3Active)
+                                {
+                                    playerTurn = PlayerTurn.PLAYER3;
+                                    Userturn12.SetActive(false);
+                                    Userturn34.SetActive(true);
+                                    Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                                }
+                                else
+                                {
+                                    playerTurn = PlayerTurn.PLAYER1;
+                                    Userturn12.SetActive(true);
+                                    Userturn34.SetActive(false);
+                                    Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                                }
+                             
 
-                            if (x_index != Gamesetup.board_Width)
-                            {
-                                if (CheckRightBox(x_index, y_index))
-                                {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
-                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
-                                    extra_turn = true;
-                                }
                             }
                         }
-                        if (!extra_turn)
-                        {
-                            playerTurn = PlayerTurn.PLAYER3;
-                            Userturn12.SetActive(false);
-                            Userturn34.SetActive(true);
-                            Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
-                           
-                        }
+                       
                     }
                     else if (this.playerTurn == PlayerTurn.PLAYER3)
 
                     {
-                        Debug.Log(x_index + "hit" + y_index);
-                        if (is_empty_horizontal)
+                        if (Player3Active)
                         {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
-                            hit.transform.tag = "Is play";
-                            if (y_index != 0)
+                            Debug.Log(x_index + "hit" + y_index);
+                            if (is_empty_horizontal)
                             {
-                                if (CheckTopBox(x_index, y_index))
+                                hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
+                                hit.transform.tag = "Is play";
+                                if (y_index != 0)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player3_Box;
-                                    Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
-                                    extra_turn = true;
+                                    if (CheckTopBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player3_Box;
+                                        Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
+                                        extra_turn = true;
+                                    }
+                                }
+
+                                if (y_index != Gamesetup.board_Height)
+                                {
+                                    if (CheckDownBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
+                                        Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
+                                        extra_turn = true;
+                                    }
                                 }
                             }
 
-                            if (y_index != Gamesetup.board_Height)
+                            else
+                            if (is_empty_vertical)
                             {
-                                if (CheckDownBox(x_index, y_index))
+                                hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
+                                hit.transform.tag = "Is play";
+                                if (x_index != 0)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
-                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
-                                    extra_turn = true;
+                                    if (CheckLeftBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
+                                        Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
+                                        extra_turn = true;
+                                    }
                                 }
-                            }
-                        }
 
-                        else
-                        if (is_empty_vertical)
-                        {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
-                            hit.transform.tag = "Is play";
-                            if (x_index != 0)
-                            {
-                                if (CheckLeftBox(x_index, y_index))
+                                if (x_index != Gamesetup.board_Width)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
-                                    Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
-                                    extra_turn = true;
+                                    if (CheckRightBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
+                                        Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
+                                        extra_turn = true;
+                                    }
                                 }
                             }
-
-                            if (x_index != Gamesetup.board_Width)
+                            if (!extra_turn)
                             {
-                                if (CheckRightBox(x_index, y_index))
+                                if (Player4Active)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
-                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
-                                    extra_turn = true;
+                                    playerTurn = PlayerTurn.PLAYER4;
+                                    Userturn12.SetActive(false);
+                                    Userturn34.SetActive(true);
+                                    Userturn34.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                                 }
+                                else
+                                {
+                                    playerTurn = PlayerTurn.PLAYER1;
+                                    Userturn12.SetActive(true);
+                                    Userturn34.SetActive(false);
+                                    Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                                }
+                          
                             }
                         }
-                        if (!extra_turn)
-                        {
-                            playerTurn = PlayerTurn.PLAYER4;
-                            Userturn12.SetActive(false);
-                            Userturn34.SetActive(true);
-                            Userturn34.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-                        }
+                       
                     }
                     else if (this.playerTurn == PlayerTurn.PLAYER4)
 
                     {
-                        Debug.Log(x_index + "hit" + y_index);
-                        if (is_empty_horizontal)
+                        if (Player4Active)
                         {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
-                            hit.transform.tag = "Is play";
-                            if (y_index != 0)
+                            if (is_empty_horizontal)
                             {
-                                if (CheckTopBox(x_index, y_index))
+                                hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_horizontal;
+                                hit.transform.tag = "Is play";
+                                if (y_index != 0)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player4_Box;
-                                    Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
-                                    extra_turn = true;
+                                    if (CheckTopBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player4_Box;
+                                        Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
+                                        extra_turn = true;
+                                    }
+                                }
+
+                                if (y_index != Gamesetup.board_Height)
+                                {
+                                    if (CheckDownBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
+                                        Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
+                                        extra_turn = true;
+                                    }
                                 }
                             }
 
-                            if (y_index != Gamesetup.board_Height)
+                            else
+                     if (is_empty_vertical)
                             {
-                                if (CheckDownBox(x_index, y_index))
+                                hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
+                                hit.transform.tag = "Is play";
+                                if (x_index != 0)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
-                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
-                                    extra_turn = true;
+                                    if (CheckLeftBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
+                                        Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
+                                        extra_turn = true;
+                                    }
                                 }
-                            }
-                        }
 
-                        else
-                        if (is_empty_vertical)
-                        {
-                            hit.transform.gameObject.GetComponent<SpriteRenderer>().sprite = Player1_vertical;
-                            hit.transform.tag = "Is play";
-                            if (x_index != 0)
-                            {
-                                if (CheckLeftBox(x_index, y_index))
+                                if (x_index != Gamesetup.board_Width)
                                 {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
-                                    Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
-                                    extra_turn = true;
+                                    if (CheckRightBox(x_index, y_index))
+                                    {
+                                        Player2Score++;
+                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
+                                        Gamesetup.boxs[x_index, y_index].tag = "mark box";
+                                        Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
+                                        extra_turn = true;
+                                    }
                                 }
                             }
-
-                            if (x_index != Gamesetup.board_Width)
+                            if (!extra_turn)
                             {
-                                if (CheckRightBox(x_index, y_index))
-                                {
-                                    Player2Score++;
-                                    Player2Points.text = "Player2 Point: " + Player2Score;
-                                    Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
-                                    Gamesetup.boxs[x_index, y_index].tag = "mark box";
-                                    Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
-                                    extra_turn = true;
-                                }
+                                playerTurn = PlayerTurn.PLAYER1;
+                                Userturn12.SetActive(true);
+                                Userturn34.SetActive(false);
+                                Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                             }
                         }
-                        if (!extra_turn)
-                        {
-                            playerTurn = PlayerTurn.PLAYER1;
-                            Userturn12.SetActive(true);
-                            Userturn34.SetActive(false);
-                            Userturn12.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-                        }
+                       
+                     
                     }
                 }
             }

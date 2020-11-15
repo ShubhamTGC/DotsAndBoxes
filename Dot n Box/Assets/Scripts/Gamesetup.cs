@@ -47,10 +47,10 @@ public class Gamesetup : MonoBehaviour
     void Start()
     {
 
-        //board_Width = width;
-        //board_Height = height;
+       // board_Width = width;
+      //  board_Height = height;
         GameInstance = GameMenu.MainGame;
-        Debug.Log("board hieght " + GameInstance.Height + "width " + GameInstance.width);
+        //Debug.Log("board hieght " + GameInstance.Height + "width " + GameInstance.width);
         board_Height = GameInstance.Height;
         board_Width = GameInstance.width;
         if (board_Width > 7 && board_Height > 8)  // 8 x 9
