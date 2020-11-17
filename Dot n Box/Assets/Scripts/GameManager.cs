@@ -12,21 +12,22 @@ public class GameManager : MonoBehaviour
         PLAYER3,
         PLAYER4,
     }
-    public Text Player1Points, Player2Points;
+    public Text Player1Points, Player2Points,Player3Points,Player4Points;
     public Text WinnerText;
     static int Player1Score;
-    static int Player2Score;
+    static int Player2Score,Player3Score,Player4Score;
     public PlayerTurn playerTurn;
-    public GameObject P1Indication,P2Indication;
     public Sprite Player1_vertical, Player1_horizontal, Player1_Box, Player2_Box, Player3_Box, Player4_Box;
-
+    public Text Player1Name, Player2Name, Player3Name, Player4Name;
 
     int BoxCount = Gamesetup.board_Height * Gamesetup.board_Width;
     public GameObject Userturn12, Userturn34;
     private static GameMenu GameInstance;
     public GameObject Player1Dies, Player2Dies, Player3Dies, Player4Dies;
     private bool Player1Active, Player2Active, Player3Active, Player4Active;
+   
     public GameObject LoadingPage;
+    public List<Sprite> Dies;
     IEnumerator Start()
     {
         LoadingPage.SetActive(true);
@@ -44,6 +45,8 @@ public class GameManager : MonoBehaviour
             Player2Dies.SetActive(true);
             Player3Dies.SetActive(false);
             Player4Dies.SetActive(false);
+            Player1Name.text = GameInstance.Player1name;
+            Player2Name.text = GameInstance.player2name;
             if (randomvalue < 0.5f)
             {
                 Userturn12.SetActive(true);
@@ -65,6 +68,9 @@ public class GameManager : MonoBehaviour
             Player2Dies.SetActive(true);
             Player3Dies.SetActive(true);
             Player4Dies.SetActive(false);
+            Player1Name.text = GameInstance.Player1name;
+            Player2Name.text = GameInstance.player2name;
+            Player3Name.text = GameInstance.player3name;
             if (randomvalue < 0.5f)
             {
                 Userturn12.SetActive(true);
@@ -93,6 +99,10 @@ public class GameManager : MonoBehaviour
             Player2Dies.SetActive(true);
             Player3Dies.SetActive(true);
             Player4Dies.SetActive(true);
+            Player1Name.text = GameInstance.Player1name;
+            Player2Name.text = GameInstance.player2name;
+            Player3Name.text = GameInstance.player3name;
+            Player4Name.text = GameInstance.player4name;
             if (randomvalue < 0.5f)
             {
                 Userturn12.SetActive(true);
@@ -209,7 +219,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckTopBox(x_index, y_index))
                                     {
                                         Player1Score++;
-                                        Player1Points.text = "Player1 Point: " + Player1Score;
+                                        Player1Points.text =  Player1Score.ToString();
                                         Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player1_Box;
                                         Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
@@ -223,7 +233,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckDownBox(x_index, y_index))
                                     {
                                         Player1Score++;
-                                        Player1Points.text = "Player1 Point: " + Player1Score;
+                                        Player1Points.text =  Player1Score.ToString();
                                         Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
                                         Gamesetup.boxs[x_index, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
@@ -241,7 +251,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckLeftBox(x_index, y_index))
                                     {
                                         Player1Score++;
-                                        Player1Points.text = "Player1 Point: " + Player1Score;
+                                        Player1Points.text =  Player1Score.ToString();
                                         Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
                                         Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
@@ -254,7 +264,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckRightBox(x_index, y_index))
                                     {
                                         Player1Score++;
-                                        Player1Points.text = "Player1 Point: " + Player1Score;
+                                        Player1Points.text = Player1Score.ToString();
                                         Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player1_Box;
                                         Gamesetup.boxs[x_index, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P1";
@@ -291,7 +301,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckTopBox(x_index, y_index))
                                     {
                                         Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player2Points.text = Player2Score.ToString();
                                         Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player2_Box;
                                         Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
@@ -304,7 +314,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckDownBox(x_index, y_index))
                                     {
                                         Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player2Points.text =  Player2Score.ToString();
                                         Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
                                         Gamesetup.boxs[x_index, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
@@ -323,7 +333,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckLeftBox(x_index, y_index))
                                     {
                                         Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player2Points.text =  Player2Score.ToString();
                                         Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
                                         Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
@@ -336,7 +346,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckRightBox(x_index, y_index))
                                     {
                                         Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player2Points.text =  Player2Score.ToString();
                                         Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player2_Box;
                                         Gamesetup.boxs[x_index, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P2";
@@ -380,8 +390,8 @@ public class GameManager : MonoBehaviour
                                 {
                                     if (CheckTopBox(x_index, y_index))
                                     {
-                                        Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player3Score++;
+                                        Player3Points.text = Player3Score.ToString();
                                         Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player3_Box;
                                         Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
@@ -393,8 +403,8 @@ public class GameManager : MonoBehaviour
                                 {
                                     if (CheckDownBox(x_index, y_index))
                                     {
-                                        Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player3Score++;
+                                        Player3Points.text =  Player3Score.ToString();
                                         Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
                                         Gamesetup.boxs[x_index, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
@@ -412,8 +422,8 @@ public class GameManager : MonoBehaviour
                                 {
                                     if (CheckLeftBox(x_index, y_index))
                                     {
-                                        Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player3Score++;
+                                        Player3Points.text = Player3Score.ToString();
                                         Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
                                         Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
@@ -425,8 +435,8 @@ public class GameManager : MonoBehaviour
                                 {
                                     if (CheckRightBox(x_index, y_index))
                                     {
-                                        Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player3Score++;
+                                        Player3Points.text = Player3Score.ToString();
                                         Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player3_Box;
                                         Gamesetup.boxs[x_index, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P3";
@@ -468,8 +478,8 @@ public class GameManager : MonoBehaviour
                                 {
                                     if (CheckTopBox(x_index, y_index))
                                     {
-                                        Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player4Score++;
+                                        Player4Points.text =  Player4Score.ToString();
                                         Gamesetup.boxs[x_index, y_index - 1].GetComponent<SpriteRenderer>().sprite = Player4_Box;
                                         Gamesetup.boxs[x_index, y_index - 1].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index - 1].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
@@ -482,7 +492,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckDownBox(x_index, y_index))
                                     {
                                         Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player4Points.text =  Player4Score.ToString();
                                         Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
                                         Gamesetup.boxs[x_index, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
@@ -501,7 +511,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckLeftBox(x_index, y_index))
                                     {
                                         Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player4Points.text = Player4Score.ToString();
                                         Gamesetup.boxs[x_index - 1, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
                                         Gamesetup.boxs[x_index - 1, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index - 1, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";
@@ -514,7 +524,7 @@ public class GameManager : MonoBehaviour
                                     if (CheckRightBox(x_index, y_index))
                                     {
                                         Player2Score++;
-                                        Player2Points.text = "Player2 Point: " + Player2Score;
+                                        Player4Points.text =  Player4Score.ToString();
                                         Gamesetup.boxs[x_index, y_index].GetComponent<SpriteRenderer>().sprite = Player4_Box;
                                         Gamesetup.boxs[x_index, y_index].tag = "mark box";
                                         Gamesetup.boxs[x_index, y_index].transform.GetChild(0).GetComponent<TextMesh>().text = "P4";

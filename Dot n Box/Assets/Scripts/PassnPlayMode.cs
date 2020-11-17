@@ -16,12 +16,13 @@ public class PassnPlayMode : MonoBehaviour
     public Sprite Clicked, NotClicked;
     public List<GameObject> playersButtons,PlayerSelectionboard;
     public List<Toggle> TwoPlayertoggle;
+    public List<InputField> TwoPlayerName,otherplayername;
     public List<GameObject> ModeHide;
     private int player1index, player2index, player3index;
     private GameObject Player1indexObj, Player2indexObj, Player3indexObj;
     public List<GameObject> Gridbuttons;
     public GameObject GameModesToggles, updateMsg, PlayerSetupPage, GamesetuPage;
-
+    private bool TwoPlayer, ThreePlayer, FourPlayer;
 
     void Start()
     {
@@ -66,6 +67,9 @@ public class PassnPlayMode : MonoBehaviour
         MainMenu.Player3 = false;
         MainMenu.Player4 = false;
         string gridsize = "3x4";
+        TwoPlayer = true;
+        ThreePlayer = false;
+        FourPlayer = false;
         string[] gridvalue = gridsize.Split("x"[0]);
         MainMenu.width = int.Parse(gridvalue[0]);
         MainMenu.Height = int.Parse(gridvalue[1]);
@@ -91,14 +95,37 @@ public class PassnPlayMode : MonoBehaviour
                 TwoPlayertoggle[b].isOn = true;
                 MainMenu.Red = true;
                 MainMenu.Blue = true;
-                ModeHide[b].SetActive(false);
+                // ModeHide[b].SetActive(false);
+                TwoPlayerName.ForEach(x =>
+                {
+                    x.interactable = false;
+                });
+                otherplayername.ForEach(x =>
+                {
+                    x.interactable = true;
+                });
+              
+                MainMenu.Player1name = TwoPlayerName[0].text == "" ? "Player1" : TwoPlayerName[0].text;
+                MainMenu.player2name = TwoPlayerName[1].text == "" ? "Player2" : TwoPlayerName[1].text;
+
             }
             else
             {
                 MainMenu.Pink = false;
                 MainMenu.Purple = false;
                 TwoPlayertoggle[b].isOn = false;
-                ModeHide[b].SetActive(true);
+                //ModeHide[b].SetActive(true);
+                TwoPlayerName.ForEach(x =>
+                {
+                    x.interactable = true;
+
+                });
+                otherplayername.ForEach(x =>
+                {
+                    x.interactable = false;
+                });
+                MainMenu.Player1name = otherplayername[0].text == "" ? "Player1" : TwoPlayerName[0].text;
+                MainMenu.player2name = otherplayername[1].text == "" ? "Player2" : TwoPlayerName[1].text;
             }
         }
     }
@@ -111,6 +138,9 @@ public class PassnPlayMode : MonoBehaviour
             {
                 playersButtons[a].GetComponent<Image>().sprite = Clicked;
                 PlayerSelectionboard[a].SetActive(true);
+                TwoPlayer = true;
+                ThreePlayer = false;
+                FourPlayer = false;
                 TwoPlayerdataSetup();
             }
             else
@@ -121,11 +151,17 @@ public class PassnPlayMode : MonoBehaviour
         }
         if (Button.name.Equals("3p", System.StringComparison.OrdinalIgnoreCase))
         {
+            TwoPlayer = false;
+            ThreePlayer = true;
+            FourPlayer = false;
             TherePlayerdataSetup();
             ThreePlayerSetup();
         }
         if (Button.name.Equals("4p", System.StringComparison.OrdinalIgnoreCase))
         {
+            TwoPlayer = false;
+            ThreePlayer = false;
+            FourPlayer = true;
             FourPlayerdataSetup();
             //ThreePlayerSetup();
         }
@@ -142,6 +178,10 @@ public class PassnPlayMode : MonoBehaviour
         MainMenu.Blue = true;
         MainMenu.Pink = false;
         MainMenu.Purple = false;
+        MainMenu.Player1name = "Player1";
+        MainMenu.player2name = "player2";
+        MainMenu.player3name = "";
+        MainMenu.player4name = "";
     }
 
     void TherePlayerdataSetup()
@@ -154,6 +194,10 @@ public class PassnPlayMode : MonoBehaviour
         MainMenu.Blue = true;
         MainMenu.Pink = true;
         MainMenu.Purple = false;
+        MainMenu.Player1name = "Player1";
+        MainMenu.player2name = "Player2";
+        MainMenu.player3name = "Player3";
+        MainMenu.player4name = "";
     }
 
     void FourPlayerdataSetup()
@@ -166,6 +210,10 @@ public class PassnPlayMode : MonoBehaviour
         MainMenu.Blue = true;
         MainMenu.Pink = true;
         MainMenu.Purple = true;
+        MainMenu.Player1name = "Player1";
+        MainMenu.player2name = "Player2";
+        MainMenu.player3name = "Player3";
+        MainMenu.player4name = "Player4";
     }
 
     public void TwoPlayerTilesSelection(Toggle toggle)
@@ -174,11 +222,37 @@ public class PassnPlayMode : MonoBehaviour
         {
             if (TwoPlayertoggle[a].name == toggle.name)
             {
-                ModeHide[a].SetActive(!TwoPlayertoggle[a].isOn);
+                MainMenu.Red = false;
+                MainMenu.Blue = false;
+                MainMenu.Pink = true;
+                MainMenu.Purple = true;
+            
+                TwoPlayerName.ForEach(x =>
+                {
+                    x.interactable = false;
+                });
+                otherplayername.ForEach(x =>
+                {
+                    x.interactable = true;
+                });
+           
+
             }
             else
             {
-                ModeHide[a].SetActive(true);
+                MainMenu.Red = true;
+                MainMenu.Blue = true;
+                MainMenu.Pink = false;
+                MainMenu.Purple = false;
+               
+                TwoPlayerName.ForEach(x =>
+                {
+                    x.interactable = true;
+                });
+                otherplayername.ForEach(x =>
+                {
+                    x.interactable = false;
+                });
             }
         }
     }
@@ -303,5 +377,24 @@ public class PassnPlayMode : MonoBehaviour
     //    });
     //}
 
+    public void OnUserInput()
+    {
+        if (TwoPlayer)
+        {
+            if (TwoPlayertoggle[0].isOn)
+            {
+                MainMenu.Player1name = TwoPlayerName[0].text == "" ? "Player 1" : TwoPlayerName[0].text;
+                MainMenu.player2name = TwoPlayerName[1].text == "" ? "player 2" : TwoPlayerName[1].text;
+            }
+            else
+            {
+                MainMenu.Player1name = otherplayername[0].text == "" ? "Player 1" : otherplayername[0].text;
+                MainMenu.player2name = otherplayername[1].text == "" ? "Player 2" : otherplayername[1].text;
+            }
+            
+        }
+
+        
+    }
 
 }
