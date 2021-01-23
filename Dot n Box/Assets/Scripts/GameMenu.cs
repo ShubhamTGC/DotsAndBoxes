@@ -9,8 +9,8 @@ public class GameMenu : MonoBehaviour
     public static GameMenu MainGame { get; set; }
     [HideInInspector] public int width, Height;
     [HideInInspector] public bool Player1,Player2,Player3,Player4;
-    [HideInInspector] public bool Red, Blue, Pink, Purple;
-    [HideInInspector] public string Player1name, player2name, player3name, player4name;
+     public bool Red, Blue, Pink, Purple;
+     public string Player1name, player2name, player3name, player4name;
     [HideInInspector] public string player1Die, Player2Die, Player3Die, Player4Die;
     public PassnPlayMode PlayerSetupdata;
     public Button PlayerBtn;

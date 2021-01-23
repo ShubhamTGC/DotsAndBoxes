@@ -419,7 +419,15 @@ MonoBehaviour:
   Player3Dies: {fileID: 477083681}
   Player4Dies: {fileID: 891106664}
   LoadingPage: {fileID: 625151241}
-  Dies: []
+  Dies:
+  - {fileID: 21300000, guid: 8f92c01b87a3f8a48a089929addae3b6, type: 3}
+  - {fileID: 21300000, guid: 4a6ddb0785b7b7048b8d1ce531a92c65, type: 3}
+  - {fileID: 21300000, guid: b01642b8589eee64bb58374711f713c3, type: 3}
+  - {fileID: 21300000, guid: d8e2ffc1f79ec464daf6caa037866916, type: 3}
+  redDieColor: {r: 0.89019614, g: 0.10196079, b: 0.23529413, a: 1}
+  PinkDieColor: {r: 0.85098046, g: 0.25882354, b: 0.5921569, a: 1}
+  blueDieColor: {r: 0.11764707, g: 0.30588236, b: 0.5921569, a: 1}
+  PurpleDiecolor: {r: 0.38823533, g: 0.11764707, b: 0.5921569, a: 1}
 --- !u!4 &222129431
 Transform:
   m_ObjectHideFlags: 0

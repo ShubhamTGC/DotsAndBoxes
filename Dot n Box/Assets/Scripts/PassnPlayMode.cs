@@ -16,13 +16,13 @@ public class PassnPlayMode : MonoBehaviour
     public Sprite Clicked, NotClicked;
     public List<GameObject> playersButtons,PlayerSelectionboard;
     public List<Toggle> TwoPlayertoggle;
-    public List<InputField> TwoPlayerName,otherplayername;
+    public List<InputField> TwoPlayerName,otherplayername,ThreePlayerNameInput;
     public List<GameObject> ModeHide;
-    private int player1index, player2index, player3index;
+    [SerializeField]private int player1index, player2index, player3index;
     private GameObject Player1indexObj, Player2indexObj, Player3indexObj;
     public List<GameObject> Gridbuttons;
     public GameObject GameModesToggles, updateMsg, PlayerSetupPage, GamesetuPage;
-    private bool TwoPlayer, ThreePlayer, FourPlayer;
+    [SerializeField]private bool TwoPlayer, ThreePlayer, FourPlayer;
 
     void Start()
     {
@@ -60,6 +60,10 @@ public class PassnPlayMode : MonoBehaviour
 
     void SinglePlayerSetup()
     {
+        var setup = new GameInitialSetup();
+        CommonPlayerSetup(setup);
+        //setup.Players[0].Dia = Dia.Blue;
+        //setup.Players[1].Dia = Dia.Red;
         GamesetuPage.SetActive(false);
         PlayerSetupPage.SetActive(true);
         MainMenu.Player1 = true;
@@ -93,9 +97,6 @@ public class PassnPlayMode : MonoBehaviour
             if (b == 0)
             {
                 TwoPlayertoggle[b].isOn = true;
-                MainMenu.Red = true;
-                MainMenu.Blue = true;
-                // ModeHide[b].SetActive(false);
                 TwoPlayerName.ForEach(x =>
                 {
                     x.interactable = false;
@@ -104,17 +105,14 @@ public class PassnPlayMode : MonoBehaviour
                 {
                     x.interactable = true;
                 });
-              
-                MainMenu.Player1name = TwoPlayerName[0].text == "" ? "Player1" : TwoPlayerName[0].text;
-                MainMenu.player2name = TwoPlayerName[1].text == "" ? "Player2" : TwoPlayerName[1].text;
+                setup.Players[0].Dia = Dia.Blue;
+                setup.Players[1].Dia = Dia.Red;
+
 
             }
             else
             {
-                MainMenu.Pink = false;
-                MainMenu.Purple = false;
                 TwoPlayertoggle[b].isOn = false;
-                //ModeHide[b].SetActive(true);
                 TwoPlayerName.ForEach(x =>
                 {
                     x.interactable = true;
@@ -124,8 +122,8 @@ public class PassnPlayMode : MonoBehaviour
                 {
                     x.interactable = false;
                 });
-                MainMenu.Player1name = otherplayername[0].text == "" ? "Player1" : TwoPlayerName[0].text;
-                MainMenu.player2name = otherplayername[1].text == "" ? "Player2" : TwoPlayerName[1].text;
+                setup.Players[0].Dia = Dia.Pink;
+                setup.Players[1].Dia = Dia.Purple;
             }
         }
     }
@@ -141,7 +139,38 @@ public class PassnPlayMode : MonoBehaviour
                 TwoPlayer = true;
                 ThreePlayer = false;
                 FourPlayer = false;
+                //SinglePlayerSetup();
                 TwoPlayerdataSetup();
+                for (int b = 0; b < TwoPlayertoggle.Count; b++)
+                {
+                    if (b == 0)
+                    {
+                        TwoPlayertoggle[b].isOn = true;
+                        TwoPlayerName.ForEach(x =>
+                        {
+                            x.interactable = false;
+                        });
+                        otherplayername.ForEach(x =>
+                        {
+                            x.interactable = true;
+                        });
+
+
+                    }
+                    else
+                    {
+                        TwoPlayertoggle[b].isOn = false;
+                        TwoPlayerName.ForEach(x =>
+                        {
+                            x.interactable = true;
+
+                        });
+                        otherplayername.ForEach(x =>
+                        {
+                            x.interactable = false;
+                        });
+                    }
+                }
             }
             else
             {
@@ -163,57 +192,46 @@ public class PassnPlayMode : MonoBehaviour
             ThreePlayer = false;
             FourPlayer = true;
             FourPlayerdataSetup();
-            //ThreePlayerSetup();
         }
     }
 
    
     void TwoPlayerdataSetup()
     {
-        MainMenu.Player1 = true;
-        MainMenu.Player2 = true;
-        MainMenu.Player3 = false;
-        MainMenu.Player4 = false;
-        MainMenu.Red = true;
-        MainMenu.Blue = true;
-        MainMenu.Pink = false;
-        MainMenu.Purple = false;
-        MainMenu.Player1name = "Player1";
-        MainMenu.player2name = "player2";
-        MainMenu.player3name = "";
-        MainMenu.player4name = "";
+        GameInitialSetup setup = new GameInitialSetup();
+        CommonPlayerSetup(setup);
     }
 
     void TherePlayerdataSetup()
     {
-        MainMenu.Player1 = true;
-        MainMenu.Player2 = true;
-        MainMenu.Player3 = true;
-        MainMenu.Player4 = false;
-        MainMenu.Red = true;
-        MainMenu.Blue = true;
-        MainMenu.Pink = true;
-        MainMenu.Purple = false;
-        MainMenu.Player1name = "Player1";
-        MainMenu.player2name = "Player2";
-        MainMenu.player3name = "Player3";
-        MainMenu.player4name = "";
+        GameInitialSetup setup = new GameInitialSetup();
+        setup.Add(Dia.Pink, "Player 3");
+        CommonPlayerSetup(setup);
     }
 
     void FourPlayerdataSetup()
     {
-        MainMenu.Player1 = true;
-        MainMenu.Player2 = true;
-        MainMenu.Player3 = true;
-        MainMenu.Player4 = true;
-        MainMenu.Red = true;
-        MainMenu.Blue = true;
-        MainMenu.Pink = true;
-        MainMenu.Purple = true;
-        MainMenu.Player1name = "Player1";
-        MainMenu.player2name = "Player2";
-        MainMenu.player3name = "Player3";
-        MainMenu.player4name = "Player4";
+        GameInitialSetup setup = new GameInitialSetup();
+        setup.Add(Dia.Pink, "Player 3");
+        setup.Add(Dia.Purple, "Player 4");
+        CommonPlayerSetup(setup);
+    }
+
+    void CommonPlayerSetup(GameInitialSetup setup)
+    {
+        MainMenu.Player1 = setup.Players.Count > 0;
+        MainMenu.Player2 = setup.Players.Count > 1;
+        MainMenu.Player3 = setup.Players.Count > 2;
+        MainMenu.Player4 = setup.Players.Count > 3;
+        MainMenu.Red = setup.Players.Any(x => x.Dia == Dia.Red);
+        MainMenu.Blue = setup.Players.Any(x => x.Dia == Dia.Blue);
+        MainMenu.Pink = setup.Players.Any(x => x.Dia == Dia.Pink);
+        MainMenu.Purple = setup.Players.Any(x => x.Dia == Dia.Purple);
+        MainMenu.player1Die = setup.Players.Any(x => x.Dia == Dia.Red).ToString();
+        MainMenu.Player1name = setup.Players.Count > 0 ? setup.Players[0].PlayerName : "";
+        MainMenu.player2name = setup.Players.Count > 1 ? setup.Players[1].PlayerName : "";
+        MainMenu.player3name = setup.Players.Count > 2 ? setup.Players[2].PlayerName : "";
+        MainMenu.player4name = setup.Players.Count > 3 ? setup.Players[3].PlayerName : "";
     }
 
     public void TwoPlayerTilesSelection(Toggle toggle)
@@ -226,7 +244,6 @@ public class PassnPlayMode : MonoBehaviour
                 MainMenu.Blue = false;
                 MainMenu.Pink = true;
                 MainMenu.Purple = true;
-            
                 TwoPlayerName.ForEach(x =>
                 {
                     x.interactable = false;
@@ -235,8 +252,6 @@ public class PassnPlayMode : MonoBehaviour
                 {
                     x.interactable = true;
                 });
-           
-
             }
             else
             {
@@ -286,24 +301,36 @@ public class PassnPlayMode : MonoBehaviour
         GameObject gb = EventSystem.current.currentSelectedGameObject;
         if (Player1Token.Contains(gb))
         {
+            int tempindex1 = 0;
+            int tempindex2 = 0;
             currentIndex = Player1Token.FindIndex(x => x.name == gb.name);  
             tokenSetup(Player1Token, player1index, currentIndex);
-            PlayerTokentaken(currentIndex, player1index, Player2Token, Player3Token);
+            (tempindex1, tempindex2) = PlayerTokentaken(currentIndex, player1index, Player2Token, Player3Token);
+            player2index = tempindex1 == 6 ? player2index : tempindex1;
+            player3index = tempindex2 == 6 ? player3index : tempindex2;
             player1index = currentIndex;
             
         }
         if (Player2Token.Contains(gb))
         {
+            int tempindex1 = 0;
+            int tempindex2 = 0;
             currentIndex = Player2Token.FindIndex(x => x.name == gb.name);
             tokenSetup(Player2Token, player2index, currentIndex);
-            PlayerTokentaken(currentIndex, player2index, Player1Token, Player3Token);
+            (tempindex1, tempindex2) = PlayerTokentaken(currentIndex, player2index, Player1Token, Player3Token) ;
+            player1index = tempindex1 == 6 ? player1index :tempindex1;
+            player3index = tempindex2 == 6 ? player3index : tempindex2;
             player2index = currentIndex;
         }
         if (Player3Token.Contains(gb))
         {
+            int tempindex1 = 0;
+            int tempindex2 = 0;
             currentIndex = Player3Token.FindIndex(x => x.name == gb.name);
             tokenSetup(Player3Token, player3index, currentIndex);
-            PlayerTokentaken(currentIndex, player3index, Player1Token, Player2Token);
+            (tempindex1, tempindex2) =PlayerTokentaken(currentIndex, player3index, Player1Token, Player2Token);
+            player1index = tempindex1 == 6 ? player1index : tempindex1;
+            player2index = tempindex2 == 6 ? player2index : tempindex2;
             player3index = currentIndex;
         }
     }
@@ -311,7 +338,7 @@ public class PassnPlayMode : MonoBehaviour
 
     void tokenSetup(List<GameObject> tokens,int lastindex,int newindex)
     {
-        Debug.Log("Index of click " + lastindex + " ==  " + newindex);
+      
         tokens[lastindex].GetComponent<RectTransform>().localScale = Vector3.one;
         tokens[lastindex].transform.GetChild(1).gameObject.SetActive(false);
         tokens[newindex].GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1f);
@@ -319,25 +346,33 @@ public class PassnPlayMode : MonoBehaviour
        
     }
 
-    void PlayerTokentaken(int NewIndex,int prevuiousIndex,List<GameObject> secondList,List<GameObject> ThirdList)
+    (int,int) PlayerTokentaken(int NewIndex,int prevuiousIndex,List<GameObject> secondList,List<GameObject> ThirdList)
     {
+        int lastvalue=6;
+        int lastvalue2=6;
         if(secondList[NewIndex].gameObject.GetComponent<RectTransform>().localScale != Vector3.one)
         {
+            lastvalue = prevuiousIndex;
             tokenSetup(secondList, NewIndex, prevuiousIndex);
         }
         if (ThirdList[NewIndex].gameObject.GetComponent<RectTransform>().localScale != Vector3.one)
         {
+            lastvalue2 = prevuiousIndex;
             tokenSetup(ThirdList, NewIndex, prevuiousIndex);
+           
         }
-     
+        return (lastvalue,lastvalue2);
+
+
+
     }
 
 
+    //TEAM PLAYER GAME SETUP COMING SOON
     void TeamPlayerSetup()
     {
         StartCoroutine(TeamplayerTask());
     }
-
     IEnumerator TeamplayerTask()
     {
         GameModesToggles.SetActive(false);
@@ -360,27 +395,16 @@ public class PassnPlayMode : MonoBehaviour
         MainMenu.Height =int.Parse(gridvalue[1]);
     }
 
-    //public void RedSelection()
-    //{
-    //    GameObject button = EventSystem.current.currentSelectedGameObject;
-    //    Red.ForEach(x =>
-    //    {
-    //        if (x.name == button.name)
-    //        {
-    //            button.GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1f);
-    //            button.transform.GetChild(1).gameObject.SetActive(true);
-    //        }
-    //        else
-    //        {
-    //            x.GetComponent<Button>().interactable = false;
-    //        }
-    //    });
-    //}
+ 
 
     public void OnUserInput()
     {
         if (TwoPlayer)
         {
+            MainMenu.Player1 = true;
+            MainMenu.Player2 = true;
+            MainMenu.Player3 = false;
+            MainMenu.Player4 = false;
             if (TwoPlayertoggle[0].isOn)
             {
                 MainMenu.Player1name = TwoPlayerName[0].text == "" ? "Player 1" : TwoPlayerName[0].text;
@@ -391,10 +415,16 @@ public class PassnPlayMode : MonoBehaviour
                 MainMenu.Player1name = otherplayername[0].text == "" ? "Player 1" : otherplayername[0].text;
                 MainMenu.player2name = otherplayername[1].text == "" ? "Player 2" : otherplayername[1].text;
             }
-            
         }
-
-        
+        if (ThreePlayer)
+        {
+            MainMenu.Player1 = true;
+            MainMenu.Player2 = true;
+            MainMenu.Player3 = true;
+            MainMenu.Player4 = false;
+            MainMenu.Player1name = ThreePlayerNameInput[0].text == "" ? "Player 1" : ThreePlayerNameInput[0].text;
+            MainMenu.player2name = ThreePlayerNameInput[1].text == "" ? "Player 2" : ThreePlayerNameInput[1].text;
+            MainMenu.player3name = ThreePlayerNameInput[1].text == "" ? "Player 3" : ThreePlayerNameInput[2].text;
+        }
     }
-
 }

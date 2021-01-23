@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
    
     public GameObject LoadingPage;
     public List<Sprite> Dies;
+    [SerializeField] private Color redDieColor, PinkDieColor, blueDieColor, PurpleDiecolor;
     IEnumerator Start()
     {
         LoadingPage.SetActive(true);
@@ -47,6 +48,7 @@ public class GameManager : MonoBehaviour
             Player4Dies.SetActive(false);
             Player1Name.text = GameInstance.Player1name;
             Player2Name.text = GameInstance.player2name;
+            
             if (randomvalue < 0.5f)
             {
                 Userturn12.SetActive(true);
@@ -88,7 +90,7 @@ public class GameManager : MonoBehaviour
             else if (randomvalue > 1f && randomvalue < 1.5f)
             {
                 Userturn34.SetActive(true);
-                Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                Userturn34.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                 Userturn12.SetActive(false);
                 playerTurn = PlayerTurn.PLAYER3;
             }
@@ -361,7 +363,7 @@ public class GameManager : MonoBehaviour
                                     playerTurn = PlayerTurn.PLAYER3;
                                     Userturn12.SetActive(false);
                                     Userturn34.SetActive(true);
-                                    Userturn34.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+                                    Userturn34.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                                 }
                                 else
                                 {
